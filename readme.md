@@ -1,0 +1,3 @@
+# resizeImageGetWebp
+
+Замена Битриксовскому resizeImageGet.
