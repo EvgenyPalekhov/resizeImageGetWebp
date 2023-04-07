@@ -8,7 +8,7 @@
 $newFileWebp = SBFile::ResizeImageGetWebp($file, array("width" => 200, "height" => 200), BX_RESIZE_IMAGE_EXACT, true);
 </pre>
 -- все параметры повторяют стандартный resizeImageGet, то есть можно просто заменить
-CFile::ResizeImageGet на SBFile::ResizeImageGetWebp
+<code>CFile::ResizeImageGe</code>t на <code>SBFile::ResizeImageGetWebp</code>
 
 Установка:
 1) Сохранить в папку php_interface/classes/ файл resizeImageGetWebp.class.php
