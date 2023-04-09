@@ -259,7 +259,7 @@ class SBFile extends CFile
     if ($gd_info['WebP Support'] === true)
     {
       $quality = (is_numeric($jpgQuality)) ? $jpgQuality : -1;
-      $resultWebp = ConvertImageWebp($arrResizeFile['src'], $quality);
+      $resultWebp = self::ConvertImageWebp($arrResizeFile['src'], $quality);
     }
 
 
