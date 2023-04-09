@@ -69,7 +69,7 @@ class SBFile extends CFile
     return $count > 1;
   }
 
-  protected function ConvertImageWebp($src, $quality = -1)
+  public static function ConvertImageWebp($src, $quality = -1)
   {
     // Если адрес полный - превращаем в относительно корня сайта
     $src = self::LTrimServerName($src);
