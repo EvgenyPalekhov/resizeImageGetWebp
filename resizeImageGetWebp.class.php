@@ -7,7 +7,7 @@
 class SBFile extends CFile
 {
 
-  public static function LTrimServerName($url)
+  private static function LTrimServerName($url)
   {
     if (mb_strpos($url, $_SERVER['DOCUMENT_ROOT']) === 0)
     {
@@ -16,7 +16,7 @@ class SBFile extends CFile
     return $url;
   }
 
-  public static function CreateFileArray($url, $title = '', $alt = '')
+  private static function CreateFileArray($url, $title = '', $alt = '')
   {
     $url = self::LTrimServerName($url);
     $imgArr = self::MakeFileArray($url);
@@ -52,7 +52,7 @@ class SBFile extends CFile
     return $image;
   }
 
-  protected function IsAnimated($filename)
+  private static function IsAnimated($filename)
   {
     // https://www.php.net/manual/ru/function.imagecreatefromgif.php#104473
     if (!($fh = @fopen($filename, 'rb')))
@@ -69,7 +69,7 @@ class SBFile extends CFile
     return $count > 1;
   }
 
-  public static function ConvertImageWebp($src, $quality = -1)
+  private static function ConvertImageWebp($src, $quality = -1)
   {
     // Если адрес полный - превращаем в относительно корня сайта
     $src = self::LTrimServerName($src);
@@ -157,6 +157,15 @@ class SBFile extends CFile
     if (!is_array($file) || !array_key_exists("FILE_NAME", $file) || $file["FILE_NAME"] == '')
       return false;
 
+    // Если это анимированный gif — прерываем функцию и отдаём файл
+    $filesrc = $_SERVER['DOCUMENT_ROOT'] . self::LTrimServerName($file["SRC"]);
+    $file_type = image_type_to_mime_type(exif_imagetype($filesrc));
+
+    if($file_type == 'image/gif' && self::IsAnimated($filesrc))
+    {
+      return $file;
+    }
+
     if ($resizeType !== BX_RESIZE_IMAGE_EXACT && $resizeType !== BX_RESIZE_IMAGE_PROPORTIONAL_ALT)
       $resizeType = BX_RESIZE_IMAGE_PROPORTIONAL;
 
@@ -209,11 +218,9 @@ class SBFile extends CFile
 
     $cacheImageFile = $cacheImageDir . "/" . $output_file;
 
-    // debug('$cacheImageFile: '.$_SERVER['DOCUMENT_ROOT'] . $cacheImageFile);
     // Если файл WebP уже существует - отдаем его обратно
     if (file_exists($_SERVER['DOCUMENT_ROOT'] . $cacheImageFile))
     {
-      // debug('Найден WebP: '.$cacheImageFile);
       if ($bInitSizes)
       {
         $arImageSize = getimagesize($_SERVER['DOCUMENT_ROOT'] . $cacheImageFile);
